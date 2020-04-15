@@ -14,6 +14,8 @@ class Node:
 
     def __repr__(self):
         return repr(self.data)
+
+'-----------------------------------------------------------'
   
 # Class to create a Doubly Linked List 
 class DoublyLinkedList: 
@@ -33,6 +35,7 @@ class DoublyLinkedList:
             nodes.append(repr(curr))
             curr = curr.next
         return '[' + ', '.join(nodes) + ']'
+
   
     # Given a reference to the head of a list and an 
     # integer, inserts a new node on the front of list 
@@ -52,6 +55,7 @@ class DoublyLinkedList:
   
         # 5. move the head to point to the new node 
         self.head = new_node 
+
   
     # Given a node as prev_node, insert a new node after 
     # the given node 
@@ -78,6 +82,7 @@ class DoublyLinkedList:
         # 7. Change previous of new_nodes's next node 
         if new_node.next is not None: 
             new_node.next.prev = new_node 
+
   
     # Given a reference to the head of DLL and integer, 
     # appends a new node at the end 
@@ -110,7 +115,35 @@ class DoublyLinkedList:
         new_node.prev = last 
   
         return
-  
+
+
+    def find(self, key):
+        """
+        Search for the first element with `data` matching
+        `key`. Return the element or `None` if not found.
+        Takes O(n) time.
+        """
+        curr = self.head
+        while curr and curr.data != key:
+            curr = curr.next
+        return curr  # Will be None if not found
+
+
+    def remove_elem(self, node):
+        """
+        Unlink an element from the list.
+        Takes O(1) time.
+        """
+        if node.prev:
+            node.prev.next = node.next
+        if node.next:
+            node.next.prev = node.prev
+        if node is self.head:
+            self.head = node.next
+        node.prev = None
+        node.next = None
+
+
     # This function prints contents of linked list 
     # starting from the given node 
     def printList(self, node): 
@@ -126,7 +159,9 @@ class DoublyLinkedList:
             print(" % d" %(last.data))
             last = last.prev 
   
-# Driver program to test above functions 
+'-----------------------------------------------------------'
+
+# Main
   
 # Start with empty list 
 llist = DoublyLinkedList() 
@@ -148,12 +183,19 @@ llist.append(4)
   
 # Insert 8, after 7. 
 # So linked list becomes 1->7->8->6->4->None 
-llist.insertAfter(llist.head.next, 8) 
+llist.insertAfter(llist.head.next.next.next, 8) 
   
 print("Created DLL is: ") 
 llist.printList(llist.head) 
 
 print("Doubly Linked list representation is: ")
+print(llist)
+
+# Try to delete an element from the list
+num = 7
+elem = llist.find(8)
+llist.remove_elem(elem)
+print("After removing %d using remove_elem(): "%num)
 print(llist)
   
 # This code is contributed by Nikhil Kumar Singh(nickzuck_007) 

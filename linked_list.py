@@ -34,7 +34,7 @@ class DoublyLinkedList:
         while curr:
             nodes.append(repr(curr))
             curr = curr.next
-        return '[' + ', '.join(nodes) + ']'
+        return '<' + ', '.join(nodes) + '>'
 
   
     # Given a reference to the head of a list and an 
@@ -183,7 +183,7 @@ llist.append(4)
   
 # Insert 8, after 7. 
 # So linked list becomes 1->7->8->6->4->None 
-llist.insertAfter(llist.head.next.next.next, 8) 
+llist.insertAfter(llist.head.next.next, 8) 
   
 print("Created DLL is: ") 
 llist.printList(llist.head) 

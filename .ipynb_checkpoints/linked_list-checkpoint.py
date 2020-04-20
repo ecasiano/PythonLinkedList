@@ -1,24 +1,30 @@
-# Definition of Linked List Class
-# Reference: https://dbader.org/blog/python-linked-list
+# A complete working Python program to demonstrate all 
+# insertion methods 
+# References: https://www.geeksforgeeks.org/doubly-linked-list/,
+#              https://dbader.org/blog/python-linked-list
+  
+# A linked list node 
+class Kink: 
+  
+    # Constructor to create a new node 
+    def __init__(self,tau,n,src,dest): 
+        self.tau = tau
+        self.n = n
+        self.src = src
+        self.dest = dest
+        self.next = None
+        self.prev = None
 
-class ListNode:
-    """
-    A node in a singly-linked list.
-    """
-    def __init__(self, data=None, next=None):
-        self.data = data
-        self.next = next
+#     def __repr__(self):
+#         return repr(self.)
 
-    def __repr__(self):
-        return repr(self.data)
-
-
-class SinglyLinkedList:
-    def __init__(self):
-        """
-        Create a new singly-linked list.
-        Takes O(1) time.
-        """
+'-----------------------------------------------------------'
+  
+# Class to create a Doubly Linked List 
+class DoublyLinkedList: 
+  
+    # Constructor for empty Doubly Linked List 
+    def __init__(self): 
         self.head = None
 
     def __repr__(self):
@@ -31,129 +37,88 @@ class SinglyLinkedList:
         while curr:
             nodes.append(repr(curr))
             curr = curr.next
-        return '[' + ', '.join(nodes) + ']'
+        return '<' + ', '.join(nodes) + '>'
 
-    def prepend(self, data):
-        """
-        Insert a new element at the beginning of the list.
-        Takes O(1) time.
-        """
-        self.head = ListNode(data=data, next=self.head)
+  
+    # Given a reference to the head of a list and an 
+    # integer, inserts a new node on the front of list 
+    def push(self, new_data): 
+  
+        # 1. Allocates node 
+        # 2. Put the data in it 
+        new_node = Node(new_data) 
+  
+        # 3. Make next of new node as head and 
+        # previous as None (already None) 
+        new_node.next = self.head 
+  
+        # 4. change prev of head node to new_node 
+        if self.head is not None: 
+            self.head.prev = new_node 
+  
+        # 5. move the head to point to the new node 
+        self.head = new_node 
 
-    def append(self, data):
-        """
-        Insert a new element at the end of the list.
-        Takes O(n) time.
-        """
-        if not self.head:
-            self.head = ListNode(data=data)
-            return
-        curr = self.head
-        while curr.next:
-            curr = curr.next
-        curr.next = ListNode(data=data)
+  
+    # Given a node as prev_node, insert a new node after 
+    # the given node 
+    def insertAfter(self, prev_node, new_data): 
+  
+        # 1. Check if the given prev_node is None 
+        if prev_node is None: 
+            print("the given previous node cannot be NULL")
+            return 
+  
+        # 2. allocate new node 
+        # 3. put in the data 
+        new_node = Node(new_data) 
+  
+        # 4. Make net of new node as next of prev node 
+        new_node.next = prev_node.next
+  
+        # 5. Make prev_node as previous of new_node 
+        prev_node.next = new_node 
+  
+        # 6. Make prev_node ass previous of new_node 
+        new_node.prev = prev_node 
+  
+        # 7. Change previous of new_nodes's next node 
+        if new_node.next is not None: 
+            new_node.next.prev = new_node 
 
-    def find(self, key):
-        """
-        Search for the first element with `data` matching
-        `key`. Return the element or `None` if not found.
-        Takes O(n) time.
-        """
-        curr = self.head
-        while curr and curr.data != key:
-            curr = curr.next
-        return curr  # Will be None if not found
+  
+    # Given a reference to the head of DLL and integer, 
+    # appends a new node at the end 
+    def append(self, new_data): 
+  
+        # 1. Allocates node 
+        # 2. Put in the data 
+        new_node = Node(new_data) 
+  
+        # 3. This new node is going to be the last node, 
+        # so make next of it as None 
+        new_node.next = None
+  
+        # 4. If the Linked List is empty, then make the 
+        # new node as head 
+        if self.head is None: 
+            new_node.prev = None
+            self.head = new_node 
+            return 
+  
+        # 5. Else traverse till the last node 
+        last = self.head 
+        while(last.next is not None): 
+            last = last.next
+  
+        # 6. Change the next of last node 
+        last.next = new_node 
+  
+        # 7. Make last node as previous of new node 
+        new_node.prev = last 
+  
+        return
 
-    def remove(self, key):
-        """
-        Remove the first occurrence of `key` in the list.
-        Takes O(n) time.
-        """
-        # Find the element and keep a
-        # reference to the element preceding it
-        curr = self.head
-        prev = None
-        while curr and curr.data != key:
-            prev = curr
-            curr = curr.next
-        # Unlink it from the list
-        if prev is None:
-            self.head = curr.next
-        elif curr:
-            prev.next = curr.next
-            curr.next = None
-
-    def reverse(self):
-        """
-        Reverse the list in-place.
-        Takes O(n) time.
-        """
-        curr = self.head
-        prev_node = None
-        next_node = None
-        while curr:
-            next_node = curr.next
-            curr.next = prev_node
-            prev_node = curr
-            curr = next_node
-        self.head = prev_node
-           
-'-------------------------------------------------------------------------'
-
-class DListNode:
-    """
-    A node in a doubly-linked list.
-    """
-    def __init__(self, data=None, prev=None, next=None):
-        self.data = data
-        self.prev = prev
-        self.next = next
-
-    def __repr__(self):
-        return repr(self.data)
-    
-class DoublyLinkedList:
-    def __init__(self):
-        """
-        Create a new doubly linked list.
-        Takes O(1) time.
-        """
-        self.head = None
-
-    def __repr__(self):
-        """
-        Return a string representation of the list.
-        Takes O(n) time.
-        """
-        nodes = []
-        curr = self.head
-        while curr:
-            nodes.append(repr(curr))
-            curr = curr.next
-        return '[' + ', '.join(nodes) + ']'
-
-    def prepend(self, data):
-        """
-        Insert a new element at the beginning of the list.
-        Takes O(1) time.
-        """
-        new_head = DListNode(data=data, next=self.head)
-        if self.head:
-            self.head.prev = new_head
-        self.head = new_head
-
-    def append(self, data):
-        """
-        Insert a new element at the end of the list.
-        Takes O(n) time.
-        """
-        if not self.head:
-            self.head = DListNode(data=data)
-            return
-        curr = self.head
-        while curr.next:
-            curr = curr.next
-        curr.next = DListNode(data=data, prev=curr)
 
     def find(self, key):
         """
@@ -165,6 +130,7 @@ class DoublyLinkedList:
         while curr and curr.data != key:
             curr = curr.next
         return curr  # Will be None if not found
+
 
     def remove_elem(self, node):
         """
@@ -180,56 +146,59 @@ class DoublyLinkedList:
         node.prev = None
         node.next = None
 
-    def remove(self, key):
-        """
-        Remove the first occurrence of `key` in the list.
-        Takes O(n) time.
-        """
-        elem = self.find(key)
-        if not elem:
-            return
-        self.remove_elem(elem)
 
-    def reverse(self):
-        """
-        Reverse the list in-place.
-        Takes O(n) time.
-        """
-        curr = self.head
-        prev_node = None
-        while curr:
-            prev_node = curr.prev
-            curr.prev = curr.next
-            curr.next = prev_node
-            curr = curr.prev
-        self.head = prev_node.prev
-        
-'-------------------------------------------------------------------------'  
+    # This function prints contents of linked list 
+    # starting from the given node 
+    def printList(self, node): 
   
+        print("\nTraversal in forward direction")
+        while(node is not None): 
+            print(" % d" %(node.data))
+            last = node 
+            node = node.next
   
-# Code execution starts here 
-if __name__=='__main__': 
+        print("\nTraversal in reverse direction")
+        while(last is not None): 
+            print(" % d" %(last.data))
+            last = last.prev 
   
-    # Initialize linked list represeting worldline configs.
-    data_struct = LinkedList() 
-    
-    
-#     # Insert 6.  So linked list becomes 6->None 
-#     llist.append(6) 
+'-----------------------------------------------------------'
+
+# Main
   
-#     # Insert 7 at the beginning. So linked list becomes 7->6->None 
-#     llist.push(7); 
+# Start with empty list 
+llist = DoublyLinkedList() 
   
-#     # Insert 1 at the beginning. So linked list becomes 1->7->6->None 
-#     llist.push(1); 
+# Insert 6. So the list becomes 6->None 
+llist.append(6) 
   
-#     # Insert 4 at the end. So linked list becomes 1->7->6->4->None 
-#     llist.append(4) 
+# Insert 7 at the beginning. 
+# So linked list becomes 7->6->None 
+llist.push(7) 
   
-#     # Insert 8, after 7. So linked list becomes 1 -> 7-> 8-> 6-> 4-> None 
-#     llist.insertAfter(llist.head.next, 8) 
+# Insert 1 at the beginning. 
+# So linked list becomes 1->7->6->None 
+llist.push(1) 
   
-    print('Created linked list is:')
-    llist.printList() 
+# Insert 4 at the end. 
+# So linked list becomes 1->7->6->4->None 
+llist.append(4) 
   
-# This code is contributed by Manikantan Narasimhan 
+# Insert 8, after 7. 
+# So linked list becomes 1->7->8->6->4->None 
+llist.insertAfter(llist.head.next.next, 8) 
+  
+print("Created DLL is: ") 
+llist.printList(llist.head) 
+
+print("Doubly Linked list representation is: ")
+print(llist)
+
+# Try to delete an element from the list
+num = 7
+elem = llist.find(8)
+llist.remove_elem(elem)
+print("After removing %d using remove_elem(): "%num)
+print(llist)
+  
+# This code is contributed by Nikhil Kumar Singh(nickzuck_007) 

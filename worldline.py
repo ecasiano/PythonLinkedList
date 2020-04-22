@@ -17,73 +17,72 @@ class Kink:
 
     def __repr__(self):
         '''Return string representation of kink'''
-        return "Kink(%s,%s,%s,%s)"%(self.tau,self.n,\
-            self.src,self.dest)
+        return f"Kink({self.tau},{self.n},{self.src},{self.dest})"
 
 class Worldline:
 
-    def __init__(self):
+    def __init__(self,n,site):
         '''Initialize worldline'''
-        self.head = None
-
+        self.first = Kink(0,n,site,site)
+        self.last = self.first
 
     def __repr__(self):
         '''String representation of worldline'''
         nodes = []
-        curr = self.head
+        curr = self.first
         while curr:
             nodes.append(repr(curr))
             curr = curr.next
         return '<' + ', '.join(nodes) + '>'
 
-    # Given a reference to the head of a list and an 
-    # kink data, inserts a new node on the front of list 
-    def push(self,new_kink):  
-  
-        # Prepended kink needs to point to originally 1st node
-        new_kink.next = self.head 
-  
-        # Prev of what is now the 2nd kink, needs to point to 1st kink
-        if self.head is not None: # Cannot change prev of 2nd if empty list
-            self.head.prev = new_kink 
-  
-        # Direct the head pointer to the prepended kink
-        self.head = new_kink 
-
-    # Given a node as prev_node, insert 
-    # a new node after the given node 
-    def insert(self,prev_kink,new_kink): 
+    def insert(self,tau_new,n_new,src_new,dest_new): 
+        '''Insert a new kink at time tau_new'''
       
-        # Check if prev_kink exists 
-        if prev_kink is None: 
-            return
-  
-        # Make new_kink's next pointer same as prev_kink's next ptr 
-        new_kink.next = prev_kink.next
-  
-        # Next of prev_kink should now point to the new_kink  
-        prev_kink.next = new_kink 
-  
-        # New_kink's prev needs to point to prev_kink
-        new_kink.prev = prev_kink
-  
-        # prev of Next kink to new_kink should now point to new_kink
-        if new_kink.next is not None: 
-            new_kink.next.prev = new_kink 
+        # Create the kink to be inserted
+        new_kink = Kink(tau_new,n_new,src_new,dest_new)
 
-    # Attach a kink at the end of the doubly linked list
+        # Get the initial/trivial kink
+        first_kink = self.first
+
+        # Get kink preceding the one to be inserted
+        curr_kink = first_kink
+        while (curr_kink.next is not None) and (curr_kink.next.tau < tau_new):
+            curr_kink = curr_kink.next
+
+        # Get kink following the one to be inserted
+        if curr_kink.next is not None:
+            next_kink = curr_kink.next
+        else: next_kink = None
+
+        # Connect new_kink to preceding kink
+        new_kink.prev = curr_kink
+        curr_kink.next = new_kink
+
+        # Connect new kink to following kink
+        if next_kink is not None:
+            new_kink.next = next_kink
+            next_kink.prev = new_kink
+
+        # If nothing after the new kink, set it as worldline.last
+        if new_kink.next is None:
+            self.last = new_kink
+
+        # CHECK for: i) inserting after trivial kink ii) middle kink
+        #            iii) at the end
+
     def append(self,new_kink):
+        '''Insert a kink at the end of the worldline'''
 
         # Initialize variable that will contain the last kink
-        last = self.head 
+        last = self.first 
   
         # new_kink will become last. Next should be None (maybe except @ T>0)
         new_kink.next = None
   
         # If empty list, make new_kink the head 
-        if self.head is None: 
+        if self.first is None: 
             new_kink.prev = None
-            self.head = new_kink 
+            self.first = new_kink 
             return
   
         # Otherwise, traverse until last node and assign it to last 
@@ -99,20 +98,42 @@ class Worldline:
     # Get the first kink in the wordline
     def first_kink(self):
 
-        return self.head
+        return self.first
 
     # Get the last kink in the worldline
     def last_kink(self): 
 
         # Initialize last node
-        last = self.head
+        last = self.first
 
         # Traverse worldline until last kink is reached
         while last.next is not None:
             last = last.next
 
         return last
+
+    # def remove(self,tau_remove):
+    #     '''Remove a kink after prev_kink'''
+
+    #     # Initial kink
+    #     kink_0 = self.head
+
+    #     # Delete a kink at tau=tau_remove
+    #     prev_kink = None
+    #     curr_kink = kink_0
+    #     while curr_kink.tau < tau_remove:
+    #         prev_kink = curr_kink
+    #         curr_kink = curr_kink.next
+
+    #     prev_kink.next = curr_kink.next;
   
+  # class Worm:
+
+  #   def __init__(self):
+
+  #       self.head
+  #       self.tail
+
 '-----------------------------------------------------------'
 
 # Main
@@ -123,22 +144,21 @@ kink = Kink(0,1,0,0)
 print("A kink object is represented as",kink)
 
 # Create a wordline object
-worldline = Worldline()
-
-# Push a kink to the worldline
-worldline.push(kink)
+i = 0   # Worldline site
+n_i = 1 # Initial number of particles on site i  
+worldline = Worldline(n_i,i)
 
 print("A worldline object is represented as",worldline)
 
-# Insert kink
-new_kink = Kink(0.5,2,1,0)
-worldline.insert(kink,new_kink)
+# Insert kink at tau_new and site i
+tau_new,n_new,src_new,dest_new = 0.78,2,1,0
+worldline.insert(tau_new,n_new,src_new,dest_new)
 
 print("Kink insertion:",worldline) 
 
 # Insert a worm between the other two kinks
-worldline.insert(worldline.head,Kink(0.3,1,0,0)) # worm tail
-worldline.insert(worldline.head,Kink(0.2,0,0,0)) # worm head
+worldline.insert(0.15*tau_new,n_i-1,i,i)
+worldline.insert(0.2*tau_new,n_i,i,i)
 
 print("Worm insertion:",worldline)
 

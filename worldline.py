@@ -84,22 +84,25 @@ class Worldline:
         new_kink.next = None
         self.last = new_kink
 
-    # Get the first kink in the wordline
-    def first_kink(self):
+    def remove(self,kink_to_remove):
+        '''Delete a specific kink'''
 
-        return self.first
+        # Get the neighbors of the undesired kink
+        prev_kink = kink_to_remove.prev
+        next_kink = kink_to_remove.next
 
-    # Get the last kink in the worldline
-    def last_kink(self): 
+        # Disconnect undesired kink from previous kink
+        prev_kink.next = next_kink
 
-        # Initialize last node
-        last = self.first
+        # Disconnect undesired kink from next kink
+        if next_kink is not None:
+         next_kink.prev = prev_kink
 
-        # Traverse worldline until last kink is reached
-        while last.next is not None:
-            last = last.next
+        # Delete undesired kink to avoid potential memory issues
+        del kink_to_remove
 
-        return last
+        # Set the new last kink of the worldline
+        self.last = next_kink
 
     # def remove(self,tau_remove):
     #     '''Remove a kink after prev_kink'''
@@ -158,6 +161,17 @@ print("Insert kink at the end:",worldline,'\n')
 worldline.append(0.999999999,2,1,0)
 print("Append kink:",worldline,'\n')
 
+# Delete the second to last kink
+worldline.remove(worldline.last.prev)
+print("Delete second to last kink: ", worldline,'\n')
+
+# Delete the second kink
+worldline.remove(worldline.first.next)
+print("Delete second kink: ", worldline,'\n')
+
 # Retrieve the first and last kinks
-print("The first kink of the worldline is:",worldline.first)
-print("The last kink of the worldline is:",worldline.last)
+print("The first kink of the worldline is:",worldline.first,'\n')
+print("The last kink of the worldline is:",worldline.last,'\n')
+
+first_kink = worldline.first
+print(worldline.first==first_kink)

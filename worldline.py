@@ -3,7 +3,12 @@
 # References: https://www.geeksforgeeks.org/doubly-linked-list/,
 #              https://dbader.org/blog/python-linked-list
   
-# A linked list node 
+class Worm:
+
+    def __init__(self):
+        self.head = None
+        self.tail = None
+
 class Kink: 
   
     def __init__(self,tau,n,src,dest): 
@@ -104,27 +109,8 @@ class Worldline:
         # Set the new last kink of the worldline
         self.last = next_kink
 
-    # def remove(self,tau_remove):
-    #     '''Remove a kink after prev_kink'''
+    def worldline
 
-    #     # Initial kink
-    #     kink_0 = self.head
-
-    #     # Delete a kink at tau=tau_remove
-    #     prev_kink = None
-    #     curr_kink = kink_0
-    #     while curr_kink.tau < tau_remove:
-    #         prev_kink = curr_kink
-    #         curr_kink = curr_kink.next
-
-    #     prev_kink.next = curr_kink.next;
-  
-  # class Worm:
-
-  #   def __init__(self):
-
-  #       self.head
-  #       self.tail
 
 '-----------------------------------------------------------'
 
@@ -165,9 +151,10 @@ print("Append kink:",worldline,'\n')
 worldline.remove(worldline.last.prev)
 print("Delete second to last kink: ", worldline,'\n')
 
-# Delete the second kink
-worldline.remove(worldline.first.next)
-print("Delete second kink: ", worldline,'\n')
+# Delete the worm head
+worm_head = worldline.first.next
+worldline.remove(worm_head)
+print("Delete worm head kink: ", worldline,'\n')
 
 # Retrieve the first and last kinks
 print("The first kink of the worldline is:",worldline.first,'\n')
